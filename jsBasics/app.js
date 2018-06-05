@@ -82,8 +82,8 @@ if (adam.score > eve.score && adam.score > snake.score) {
 //functions
 
 function calculateAge(yearBorn) {
-    var age = new Date().getFullYear() - yearBorn;
-    return age;
+        var age = new Date().getFullYear() - yearBorn;
+        return age;
 }
 //this is ES6 version
 calcAge = yearBorn => new Date().getFullYear() - yearBorn;
@@ -112,3 +112,108 @@ yTR = (name, year) => {
 
 yTR("John", 1990);
 yTR("Mary", 1945);
+
+
+//arrays
+let names = ["John", "Jane", "Mary"];
+var years = new Array(1990, 1969, 1948);
+
+console.log(names[0], years[0]);
+names[1] = 'Ben';
+console.log(names);
+
+var john = ['John', 'Smith', 1990, 'Teacher', false];
+
+john.push('blue');
+john.unshift('Mr.');
+console.log(john);
+john.pop();
+john.shift();
+
+if (john.indexOf('designer') === -1) {
+    console.log("John Is Not A Designer")
+}
+
+//Objects
+
+var john = {
+    firstName : "John",
+    lastName : "Smith",
+    yearOfBirth: 1990,
+    job : 'teacher',
+    isMarried : false,
+    family: ['Jane', 'Mark', 'Bob'],
+    calculateAge: function() {
+        var age = new Date().getFullYear() - this.yearOfBirth;
+        return age;
+    }
+};
+
+console.log(john.lastName);
+console.log(john['job']);
+
+john.lastName = 'Miller';
+john['job'] = 'programmer';
+
+console.log(john);
+
+var jane = new Object();
+
+jane.firstName = "Jane";
+jane.lastName = "Smith";
+jane['yearOfBirth'] = '1969';
+jane['job'] = 'retired';
+jane.isMarried =  true;
+
+console.log(jane);
+
+console.log(john.family, john.family[1]);
+console.log(john.calculateAge());
+var age = john.calculateAge();
+john.age = age;
+console.log(john);
+
+
+var Mark = {
+    firstName : "Mark",
+    lastName : "Smith",
+    yearOfBirth: 1990,
+    job : 'teacher',
+    isMarried : false,
+    family: ['Jane', 'Mark', 'Bob'],
+    calculateAge: function() {
+        this.age = new Date().getFullYear() - this.yearOfBirth;
+    }
+};
+
+console.log(Mark);
+
+//Loops
+
+for (var i = 0; i <= 10; i++) {
+    console.log(i);
+}
+
+var nameList = ['John', 'Jane', 'Mark', 'Mary', 'Bob'];
+
+for (var i=0; i < nameList.length; i++) {
+    console.log(nameList[i]);
+}
+
+//while loops
+var i = nameList.length - 1;
+while(i > -1) {
+    console.log(nameList[i]);
+    i--;
+}
+
+//break will stop a loop.  continue will allow you to skip a value in a loop or
+//allow something else to happen and then continue on within the loop. in this
+//case we would be skipping the value of 3.
+
+for (var i=1; i <=5; i++) {
+    if(i===3) {
+        continue;
+    }
+    console.log(i);
+}
