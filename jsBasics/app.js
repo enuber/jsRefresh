@@ -217,3 +217,97 @@ for (var i=1; i <=5; i++) {
     }
     console.log(i);
 }
+
+//cc 2
+
+var  yearsBorn = [1924, 1965, 1987, 2008];
+
+var ages = [];
+
+function printFullAge(yearsBorn) {
+    var ofAge = [];
+    for (var i=0; i<yearsBorn.length; i++) {
+        ages.push(2018 - yearsBorn[i]);
+    }
+    for (var i=0; i<ages.length; i++) {
+        if (ages[i] >= 18) {
+            console.log("Is of age and is " +ages[i] + " years old");
+            ofAge.push('true');
+        } else {
+            console.log('Is not of age and is only '  +ages[i] + " years old");
+            ofAge.push('false');
+        }
+    }
+    return ofAge;
+}
+
+var listOfBooleans = printFullAge(yearsBorn);
+console.log(listOfBooleans);
+
+
+
+//hoisting
+
+calcAge(1965);
+//this works because a function declaration is hoisted meaning it basically goes up to the top of the page
+function calcAge(year) {
+    console.log(2018-year);
+}
+// retire(1990);
+//this will not work because a function expression is not hoisted
+var retire = function(year) {
+    console.log(65 (2018-year));
+}
+
+console.log(age1); //will be undefined because age1 hasn't been declared
+var age1 = 20;
+
+function foo() {
+    console.log(age1) //will be 20 because it is not declared within the function it will look globally where it is defined
+    var age1 = 25;
+    console.log(age1) //will be 25 because it was declared locally
+}
+foo();
+console.log(age1); //will be 20 because it doens't have access to variables within a function and because it is defined globally above it will be the global number
+
+//scope chain
+
+var a = "hello";
+first();
+function first() {
+    var b = 'hi';
+    second();
+    function second() {
+        var c = 'hey';
+        console.log(a+b+c); //this will work because of scoping, c is defined in second() it looks for b in it's parent and finds it and so on.
+        third();
+    }
+}
+
+function third() {
+    var d='John';
+    // console.log(a+b+c+d); will not work in this case because only a and d are defined that this function can actually access; to fix b and c would have to be sent in.
+}
+
+//this
+
+// in a regular function call the this keyword points at the global object (window object in the browser) the window object is the default for what this is
+// in a method call the this variable points to the object that is calling the method. (so a method inside an object this refers to the object housing the method);
+// the this keyword is not assigned a value until a function where it is defined is actually called. (from where it was invoked)
+
+var john = {
+    name: 'John',
+    yob: 1990,
+    calAge: function() {
+        console.log(this); //will be the object that houses the method
+        console.log(2018-this.yob);
+    }
+};
+john.calAge();
+var mike = {
+    name: 'Mike',
+    yob: 1984
+};
+
+mike.calAge = john.calAge //allows you to assign the same method to a different object
+mike.calAge(); //now the this will be assigned to the mike object because it is the object housing the method
