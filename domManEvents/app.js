@@ -8,7 +8,7 @@ GAME RULES:
 - The first player to reach 100 points on GLOBAL score wins the game
 
 */
-var scores, roundScore, activePlayer, gamePlaying;
+var scores, roundScore, activePlayer, gamePlaying, lastDice;
 
 init();
 
@@ -33,7 +33,12 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
         diceDOM.style.display = 'block';
         diceDOM.src = 'dice-' + dice + '.png';
         //3: update the round score if the rolled number was not a 1
-        if (dice !== 1) {
+        if (dice === 6 && lastDice === 6 ) {
+            //player looses score
+            scores[activePlayer] = 0;
+            document.querySelector('#score-' + activePlayer).textContent = 0;
+            nextPlayer();
+        } else if (dice !== 1) {
             //add score
             roundScore += dice;
             document.querySelector('#current-' + activePlayer).textContent = roundScore;
@@ -41,6 +46,7 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
             //next player
             nextPlayer();
         }
+        lastDice = dice;
     }
 }); //on addEventlistener you have the event first and the function to run, you can also run the function directly there
 
@@ -50,8 +56,17 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
         scores[activePlayer] += roundScore;
         //update the UI
         document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
+        var input = document.querySelector('.final-score').value; //gives the value that is found within the input
+        var winnningScore;
+        // undefined, 0, null or "" are COERCED to false
+        //anything else is COERCED to true
+        if (input) {
+            winningScore = input;
+        } else {
+            winningScore = 100;
+        }
         //check for win condition
-        if (scores[activePlayer] >= 100) {
+        if (scores[activePlayer] >= winningScore) {
             document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
             document.querySelector('.dice').style.display = 'none';
             document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
