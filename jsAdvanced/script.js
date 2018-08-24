@@ -145,10 +145,10 @@ function interviewQuestion(job) {
     }
 }
 
-var teacherQeustion = interviewQuestion('teacher');
+var teacherQuestion = interviewQuestion('teacher');
 var designerQuestion = interviewQuestion('designer');
 
-teacherQeustion('John');
+teacherQuestion('John');
 designerQuestion('Jane');
 
 //this works because the function calls go from left to right. So interviewQuestion is called with teacher passed in
@@ -177,3 +177,60 @@ game();
     var score = Math.random() * 10;
     console.log(score >= 5 - goodLuck);
 })(5);
+
+//closures
+//an inner function always has access to the variables and parameters of its outer function even after the outer function has returned.
+//this works because when the function is returned, it is a point in memory that houses the outer variables, so when it is called again,
+//it is being called from that point in memory where it still retains the variables of it's scope chain, which includes those in the outer
+//function. The scope chain always stays in tact.
+function retirement(retirementAge) {
+    var a = ' years left until retirement';
+    return function(yearOfBirth) {
+        var age = 2018 - yearOfBirth;
+        console.log((retirementAge - age) + a);
+    }
+}
+
+var retirementUS = retirement(66);
+retirementUS(1990);
+
+//this is another way of calling the function it is called first with the age of 66 and, the function is returned and immediately
+//called again with the year of birth. the above method works as well and allows you to create a variable that houses the inner
+//function (ie the function that is returned). Then it can be called anytime with differing years.
+retirement(66)(1990);
+
+var retirementDE = retirement(65);
+var retirementIceland = retirement(67);
+
+retirementDE(1990);
+retirementIceland(1990);
+
+// function interviewQuestion(job) {
+//     if (job === 'designer'){
+//         return function(name){
+//             console.log(name + ', can you explain what UX design is');
+//         }
+//     } else if (job === 'teacher'){
+//         return function (name){
+//             console.log(name + ', what subject do you teach?');
+//         }
+//     } else {
+//         return function(name) {
+//             console.log('Hello ' + name + ', what do you do?' )
+//         }
+//     }
+// }
+
+function interviewQues(job) {
+    return function(name) {
+        if (job === 'designer'){
+            console.log(name + ', can you explain what UX design is');
+        } else if (job === 'teacher'){
+            console.log(name + ', what subject do you teach?');
+        } else {
+            console.log('Hello ' + name + ', what do you do?' )
+        }
+    }
+}
+
+interviewQues('teacher')('John');
