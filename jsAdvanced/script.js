@@ -221,6 +221,9 @@ retirementIceland(1990);
 //     }
 // }
 
+//here the inner function is returned and, will still retain the outer scopes variable of job. So we can rewrite the above
+//function this was which is much cleaner because as we are only returning one function housing the if/else statement rather
+//than rewriting the same code over and over for each portion of the if/else statement.
 function interviewQues(job) {
     return function(name) {
         if (job === 'designer'){
@@ -228,9 +231,76 @@ function interviewQues(job) {
         } else if (job === 'teacher'){
             console.log(name + ', what subject do you teach?');
         } else {
-            console.log('Hello ' + name + ', what do you do?' )
+            console.log('Hello ' + name + ', what do you do?');
         }
     }
 }
 
+//could also store the innerfunction in a variable if preferred but, this way calls the outer function, the inner function
+//is returned and then immediately gets called again with a name.
 interviewQues('teacher')('John');
+
+
+var john = {
+    name: 'John',
+    age: 26,
+    job: 'teacher',
+    presentation: function(style, timeOfDay) {
+        if (style === 'formal'){
+            console.log('Good ' + timeOfDay + ', Ladies and Gentlemen! I\'m a ' + this.job + ' and, I\'m ' + this.age + ' years old.' );
+        } else if (style === 'friendly') {
+            console.log('Hey! What\'s up? I\'m a ' + this.job + ' and, I\'m ' + this.age + ' years old. Have a nice ' + timeOfDay + '.');
+        }
+    }
+};
+var emily = {
+    name: 'Emily',
+    age: 35,
+    job: 'designer'
+};
+
+john.presentation('formal', 'morning');
+//with the call method you are borrowing a method from another object, the first thing that is passed in is the "this" variable, basically
+//what 'this' will be referring to, in the case below this will refer to the emily object.
+john.presentation.call(emily, 'friendly', 'afternoon');
+
+//apply does the same thing as call. The first variable passed in is what the "this" will be referring too and, the second half is an array of the rest
+//of the variables. Below is the structure for this but this won't actually work because the function isn't written for arrays.
+john.presentation.apply(emily, ['friendly', 'afternoon']);
+
+//bind allows us to set the this variable. The bind method doesn't immediately call the function but instead it creates a copy of the function to store it
+//somewhere. In the case below, we are passing in the "this" information, and one of the two variables we need. So every call to the johnFriendly function
+//will have 'friendly' stored already in the style arguement and, when calling the function you need to just pass in the time of day.
+
+var johnFriendly = john.presentation.bind(john, 'friendly');
+johnFriendly('morning');
+johnFriendly('night');
+var emilyFormal = john.presentation.bind(emily, 'formal');
+emilyFormal('afternoon');
+
+
+
+var years = [1990, 1965, 1937, 2005, 1998];
+
+function arrayCalc(arr, fn) {
+    var arrRes = [];
+    for (var i = 0; i < arr.length; i++) {
+        arrRes.push(fn(arr[i]));
+    }
+    return arrRes;
+}
+
+function calcAge(el) {
+    return 2018-el;
+}
+function isFullAge(limit, el) {
+    return el >= limit;
+}
+
+var ages = arrayCalc(years, calcAge);
+//here we are passing in a function, we don't care what 'this' is referring to so can just say this and, we are setting
+//the limit variable to 20, so within the arrCalc function, it will already have the limit defined and, the arr[i] value
+//will pass in the 'el' arguement of the isFullAge function.
+var fullJapan = arrayCalc(ages, isFullAge.bind(this, 20));
+console.log(ages);
+console.log(fullJapan);
