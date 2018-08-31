@@ -24,17 +24,7 @@
 
 var budgetController = (function(){
 
-    var x = 23;
 
-    var add = function(a) {
-        return x+a;
-    };
-
-    return {
-        publicTest: function(b) {
-           return add(b);
-        }
-    }
 
 })();
 
@@ -44,21 +34,43 @@ var UIController = (function(){
 })();
 
 
-//by renaming the controllers in the arguements, it allows you to be able to quickly change
+//by renaming the controllers in the arguments, it allows you to be able to quickly change
 // the names of the actual functions and not have to rename many things inside this controller
 //function if names change. In other words, we could use the actual budgetController and UIController
 //within this function but, if we changed the name, we would have to then change them throughout here
-//which is not a good practice, better to send in the functions as arguements and rename them within the
+//which is not a good practice, better to send in the functions as arguments and rename them within the
 //function.
 var controller = (function(budgetCtrl, UICtrl){
 
-    var z = budgetCtrl.publicTest(25);
+    //for DRY coding we are making this a function because we need it called both on an enter key
+    //press as well as a button click press. So better to have it once than to repeat the code.
+    var ctrlAddItem = function() {
 
-    return {
-        anotherPublic: function() {
-            console.log(z);
+        //1. get the filed input datas
+
+        //2. add the item to the budget controller.
+
+        //3. add the item to the UI
+
+        //4. calculate the budget.
+
+        //5. display the budget on the ui
+
+        console.log('its alive');
+    };
+
+    document.querySelector('.add__btn').addEventListener('click', ctrlAddItem);
+
+    //doing the key event on the document as it isn't tied to a specific element on the page. So we
+    //don't need to get a specific selector. We pass in the event object in order to find out
+    //what key was pressed. The event passes in an object with many prototypes. BUt, specifically
+    //we are interested in the keycode which references what key is being pressed. We also use
+    //the event.which because of older browsers that don't recognize the keyCode.
+    document.addEventListener('keypress', function(evt) {
+        if (evt.keyCode === 13 || evt.which === 13) {
+            ctrlAddItem();
         }
-    }
+    });
 
 })(budgetController, UIController);
 
