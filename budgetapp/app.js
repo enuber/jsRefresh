@@ -94,7 +94,8 @@ var UIController = (function(){
           return {
               type: document.querySelector(DOMstrings.inputType).value, //will be either inc or exp
               description : document.querySelector(DOMstrings.inputDescription).value,
-              value : document.querySelector(DOMstrings.inputValue).value,
+              //parseFloat converts a string to a number
+              value : parseFloat(document.querySelector(DOMstrings.inputValue).value),
           };
       },
 
@@ -120,6 +121,19 @@ var UIController = (function(){
             //insertAdjatentHTML allows you to insert html into a specific area you specify. 'beforeend' specifies where it gets put
             document.querySelector(element).insertAdjacentHTML('beforeend', newHTML);
 
+        },
+
+        clearFields: function() {
+            var fields, fieldsArr;
+            fields = document.querySelectorAll(DOMstrings.inputDescription + ', ' + DOMstrings.inputValue);
+            //fields is a list not an array. If we pass it using the call method fields becomes the "this" variable and, it
+            //basically tricks the Array into thinking it's an array. So we call the slice method of the array and pass in the variable.
+            fieldsArr = Array.prototype.slice.call(fields);
+            fieldsArr.forEach(function(current, index, array){
+                current.value = "";
+            });
+
+            fieldsArr[0].focus();
         },
 
         getDOMStrings: function() {
@@ -154,22 +168,38 @@ var controller = (function(budgetCtrl, UICtrl){
         });
     };
 
+    var updateBudget = function() {
+        //1 calculate the budget.
+
+        //2 return the budget
+
+        //3 display the budget on the ui
+
+    };
+
     //for DRY coding we are making this a function because we need it called both on an enter key
     //press as well as a button click press. So better to have it once than to repeat the code.
     var ctrlAddItem = function() {
 
         var input, newItem;
+
         //1. get the field input data
         input = UIController.getinput();
         console.log(input);
 
-        //2. add the item to the budget controller.
-        newItem = budgetCtrl.addItem(input.type, input.description, input.value);
-        //3. add the item to the UI
-        UIController.addListItem(newItem, input.type);
-        //4. calculate the budget.
+        if (input.description !== "" && !isNaN(input.value) && input.value) {
+            //2. add the item to the budget controller.
+            newItem = budgetCtrl.addItem(input.type, input.description, input.value);
 
-        //5. display the budget on the ui
+            //3. add the item to the UI
+            UIController.addListItem(newItem, input.type);
+
+            // Clear the Fields
+            UIController.clearFields();
+
+            //calculate and update budget;
+            updateBudget();
+        }
 
     };
 
