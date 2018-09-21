@@ -42,7 +42,17 @@ var budgetController = (function(){
         total: {
             exp: 0,
             inc: 0
-        }
+        },
+        budget: 0,
+        percentage: -1 //we call this -1 because it indicates it doesn't exist to begin with
+    };
+
+    var calculateTotal = function(type) {
+        var sum = 0;
+        data.allItems[type].forEach(function(currentElement) {
+            sum += currentElement.value;
+        });
+        data.total[type] = sum;
     };
 
     return {
@@ -69,6 +79,33 @@ var budgetController = (function(){
             return newItem;
         },
 
+        calcucluateBudget: function(){
+
+            //calc total income and expenses
+
+            calculateTotal('exp');
+            calculateTotal('inc');
+
+            //calc budget income - expenses
+            data.budget = data.total.inc - data.total.exp;
+
+            //calc percentage of income that is spent
+            if (data.total.inc > 0) {
+                data.percentage = Math.round((data.total.exp / data.total.inc) * 100);
+            } else {
+                data.percentage = -1;
+            }
+        },
+
+        getBudget: function() {
+          return {
+              budget: data.budget,
+              totalIncome: data.total.inc,
+              totalExpenses: data.total.exp,
+              percentage: data.percentage
+          };
+        },
+
         testing: function() {
             console.log(data);
         }
@@ -87,6 +124,10 @@ var UIController = (function(){
         inputButton: '.add__btn',
         incomeContainer: '.income__list',
         expensesContainer: '.expenses__list',
+        budgetLabel: '.budget__value',
+        incomeLabel: '.budget__income--value',
+        expenseLabel: '.budget__expenses--value',
+        percentageLabel: '.budget__expenses--percentage'
     };
 
     return{
@@ -136,6 +177,17 @@ var UIController = (function(){
             fieldsArr[0].focus();
         },
 
+        displayBudget: function(obj) {
+            document.querySelector(DOMstrings.budgetLabel).textContent = obj.budget;
+            document.querySelector(DOMstrings.incomeLabel).textContent = obj.totalIncome;
+            document.querySelector(DOMstrings.expenseLabel).textContent = obj.totalExpenses;
+            if (obj.percentage > 0) {
+                document.querySelector(DOMstrings.percentageLabel).textContent = obj.percentage + '%';
+            } else {
+                document.querySelector(DOMstrings.percentageLabel).textContent = '---';
+            }
+        },
+
         getDOMStrings: function() {
           return DOMstrings;
         }
@@ -170,11 +222,11 @@ var controller = (function(budgetCtrl, UICtrl){
 
     var updateBudget = function() {
         //1 calculate the budget.
-
+        budgetCtrl.calcucluateBudget();
         //2 return the budget
-
+        var budget = budgetCtrl.getBudget();
         //3 display the budget on the ui
-
+        UIController.displayBudget(budget);
     };
 
     //for DRY coding we are making this a function because we need it called both on an enter key
@@ -207,6 +259,12 @@ var controller = (function(budgetCtrl, UICtrl){
     //outside else, nothing will happen.
     return {
         init: function() {
+            UIController.displayBudget({
+                budget: 0,
+                totalIncome: 0,
+                totalExpenses: 0,
+                percentage: -1
+            });
             setupEventListeners();
         }
     };
